@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -19,7 +19,7 @@ namespace CA2
             PlayerID = playerID; //track number of people are creating  belongs the class 
 
         }
- 
+
         public string PlayerName
         {
             get { return _playerName; }
@@ -28,37 +28,14 @@ namespace CA2
         public int GoalsScored
         {
             get { return _goalsScored; }
-            set
-            {
-                if (value < 0)
-                {
-                    _goalsScored = 0;
-                }
-                else
-                {
-                    _goalsScored = value;
-                }
-            }
+            set => _goalsScored = value < 0 ? _goalsScored = 0 : value;
         }
         public int MatchesPlayed
         {
             get { return _matchesPlayed; }
-            set
-            {
-                if (value < 0)
-                {
-                    _matchesPlayed = 0;
-                }
-                else
-                {
-                    _matchesPlayed = value;
-                }
-
-
-            }
+            set => _matchesPlayed = value < 0 ? _matchesPlayed = 0 : value;
         }
         public int PlayerID { get; private set; } //the number is unique and can be accessed outside of the class 
-
 
         public Player(string playerNameIn, int goalsScoredIn, int matchesPlayedIn)
         {
@@ -67,8 +44,6 @@ namespace CA2
             MatchesPlayed = matchesPlayedIn;
 
         }
-
-
         public Player(string playerNameIn)
         {
             PlayerName = playerNameIn;
@@ -84,18 +59,17 @@ namespace CA2
             int scoredPayment = 0;
             const int MATCHES_PLAYED_VALUE = 300;
 
-            //Alternatives to If Statements
+            //Alternatives to IF Statements
             scoredPayment = GoalsScored >= 3 ? 500 : 0;
             scoredPayment = GoalsScored >= 6 ? scoredPayment + 1000 : 0;
             scoredPayment = GoalsScored >= 7 ? scoredPayment + 2000 : 0;
-
             return scoredPayment + MATCHES_PLAYED_VALUE * MatchesPlayed;
         }
 
+
         public override string ToString()
         {
-            //return "  "+myNumberPlayID+"     " +playerName+"       "+GoalsScored+"     "+MatchesPlayed+"     "+CalcBonus();
-            return String.Format("\n{0,-9}{1,-11}{2,-11}{3,-11}{4,-11}", PlayerID, PlayerName, GoalsScored, MatchesPlayed, CalcBonus());
+            return String.Format("\n{0,-9}{1,-11}{2,-11}{3,-11}{4,-11:C}", PlayerID, PlayerName, GoalsScored, MatchesPlayed, CalcBonus());
         }
 
         public virtual string ModifyPlayersName(string newPlayerName)
