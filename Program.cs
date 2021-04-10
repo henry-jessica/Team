@@ -8,7 +8,8 @@ using System.Text.RegularExpressions;
 * Lecturer  Vivion                                                                                     *                                                                                         
 * Create Date: 26/03/2021                                                                              *
 * Date last modification : 04/04/2021                                                                  *
-* Modification by Jessica Henry @ Method - ModifyDetails - Line 284                                    *
+* Modification 04/04 by Jessica Henry @ Method - ModifyDetails - Line 284                              *
+* Modification 05/04 by Jessica Henry @ Method - ModifyDetails - Line 382                              *
 ********************************************************************************************************/
 
 namespace CA2
@@ -102,8 +103,9 @@ namespace CA2
                 do
                 {
                     Console.Write("Insert Player's name : ");
+                    string name = Console.ReadLine();
+                    result = IsPresent(name, "Player's name")&& CheckString(name, "Player's name");
                     players[count].PlayerName = Console.ReadLine();
-                    result = IsPresent(players[count].PlayerName, "Player's name") && CheckString(players[count].PlayerName, "Player's name");
 
                 } while (!result);
                 do
@@ -151,7 +153,7 @@ namespace CA2
                 else
                 {
                     Console.WriteLine("Maximum 5 Players cadastrated, main menu");
-                    Thread.Sleep(1500);
+                    Thread.Sleep(2000);
                 }
             } while (count < 5 && (choice == "yes" || choice == "y"));
             return players;
@@ -251,7 +253,7 @@ namespace CA2
 
             foreach (var playersInfo in players)
             {
-                Console.WriteLine(playersInfo);
+                Console.WriteLine(playersInfo); 
             }
 
             Console.WriteLine("Press any key to continue...");
@@ -306,69 +308,97 @@ namespace CA2
                                 userChoice = Console.ReadLine();
                                 result = IsPresent(userChoice, "Input Choice") && IsInteger(userChoice, "Input Choice", ref inputTypeInt) && CheckRange("User Input", 1, EXIT, inputTypeInt);
                             } while (!result);
+
                             if (userChoice == "1")
-                            {
-                                Console.Write("Insira a new name for the user: ");
-                                string newName = Console.ReadLine();
-                                players[i].PlayerName = players[i].ModifyPlayersName(newName);
-                                userMadeChanges = true;
-                            }
-                            else if (userChoice == "2")
                             {
                                 do
                                 {
-                                    int newGoalsScored = 0;
+                                    Console.Write("Insira a new name for the user: ");
+                                    string newName = Console.ReadLine();
+                                    result = IsPresent(newName, "Player's name") && CheckString(newName, "Player's name");
+                                    players[i].PlayerName = players[i].ModifyPlayersName(newName);
+                                    userMadeChanges = true;
+                                } while (!result);
+                              
+                               
+                            }
+                            else if (userChoice == "2")
+                            {
+                                int newGoalsScored = 0;
+                                do
+                                {
                                     Console.Write("Insira a new Goals Scored: ");
                                     string goalsScore = Console.ReadLine();
                                     result = IsPresent(goalsScore, "Goals Scored") && IsInteger(goalsScore, "Goals Scored", ref newGoalsScored);
-                                    players[i].GoalsScored = players[i].ModifyGoalsScored(newGoalsScored);
                                 } while (!result);
+                                
+                                players[i].GoalsScored = players[i].ModifyGoalsScored(newGoalsScored);
                                 userMadeChanges = true;
                             }
                             else if (userChoice == "3")
                             {
+                                int newMatchesPlayed = 0;
                                 do
                                 {
-                                    int newMatchesPlayed = 0;
                                     Console.Write("Insert a New Numbers of matches Played: ");
                                     string matchesPlayed = Console.ReadLine();
                                     result = IsPresent(matchesPlayed, "Matches Played") && IsInteger(matchesPlayed, "Matches Played", ref newMatchesPlayed);
-                                    players[i].MatchesPlayed = players[i].ModifyMatchesPlayed(newMatchesPlayed);
+                                   
                                 } while (!result);
+                                players[i].MatchesPlayed = players[i].ModifyMatchesPlayed(newMatchesPlayed);
                                 userMadeChanges = true;
                             }
                             else if ((players[i].GetType() == typeof(JuniorPlayer) && userChoice == "4"))
                             {
+                                int newAgeJuniorPlayer = 0;
                                 do
                                 {
-                                    int newAgeJuniorPlayer = 0;
                                     Console.Write("Enter Age of the Junior Player: ");
                                     string age = Console.ReadLine();
                                     result = IsPresent(age, "Junior Player Age") && IsInteger(age, "Junior Player Age", ref newAgeJuniorPlayer) && CheckPositive(newAgeJuniorPlayer, "Age") && CheckRange("Junior Age", 3, 17, newAgeJuniorPlayer);
-                                    ((JuniorPlayer)players[i]).Age = ((JuniorPlayer)players[i]).ModifyJuniorPlayerAge(newAgeJuniorPlayer);
+                                 
                                 } while (!result);
+                                ((JuniorPlayer)players[i]).Age = ((JuniorPlayer)players[i]).ModifyJuniorPlayerAge(newAgeJuniorPlayer);
                                 userMadeChanges = true;
                             }
-                        } while (inputTypeInt != EXIT);
-                        if (userMadeChanges)
-                        {
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            Console.WriteLine("[SUCCESS] Player details modified!\n");
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                            PrintHeader(i);
-                            Console.WriteLine(players[i].ToString());
-                            UserRedoAction("\nWould you like to modify another player ?", out l_choice, out result);
-                        }
-                        else
-                        {
-                            Console.ForegroundColor = ConsoleColor.Blue;
-                            Console.WriteLine("No information has been modified!");
-                            Thread.Sleep(2000);
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                        }
+                            if (userMadeChanges)
+                            {
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                Console.WriteLine("[SUCCESS] Player details modified!\n");
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                PrintHeader(i);
+                                Console.WriteLine(players[i].ToString());
+                                UserRedoAction("\nWould you like to modify another information about the player ?", out l_choice, out result);
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Blue;
+                                Console.WriteLine("No information has been modified!");
+                                Thread.Sleep(2000);
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                            }
+
+                        } while (inputTypeInt != EXIT && ( l_choice == "yes" || l_choice == "y"));
+                        //if (userMadeChanges)
+                        //{
+                        //    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        //    Console.WriteLine("[SUCCESS] Player details modified!\n");
+                        //    Console.ForegroundColor = ConsoleColor.Gray;
+                        //    PrintHeader(i);
+                        //    Console.WriteLine(players[i].ToString());
+                        //    UserRedoAction("\nWould you like to modify another player ?", out l_choice, out result);
+                        //}
+                        //else
+                        //{
+                        //    Console.ForegroundColor = ConsoleColor.Blue;
+                        //    Console.WriteLine("No information has been modified!");
+                        //    Thread.Sleep(2000);
+                        //    Console.ForegroundColor = ConsoleColor.Gray;
+                        //}
                     }
                 }
-            } while (l_choice == "yes" || l_choice == "y" && userInput != "e");
+                UserRedoAction("\nWould you like to modify another player ?", out l_choice, out result);
+            } while (l_choice == "yes" || l_choice == "y");
         }
         private static void UserRedoAction(string questionIn, out string l_choice, out bool result)
         {
@@ -387,7 +417,7 @@ namespace CA2
             {
                 Console.Write("\nEnter Player ID : ");
                 string userInput = Console.ReadLine();
-                result = IsPresent(userInput, "Player ID") && IsInteger(userInput, "Code", ref playerNumID) && CheckPlayerID(playerNumID, "ID Number");
+                result = IsPresent(userInput, "Player ID") && IsInteger(userInput, "Code", ref playerNumID);// && CheckPlayerID(playerNumID, "ID Number");
 
             } while (!result);
             for (int i = 0; i < count; i++)
@@ -479,7 +509,7 @@ namespace CA2
         }
         public static bool CheckPositive(int num, string name)
         {
-            if (num > 0)
+            if (num >= 0)
                 return true;
             else
             {
