@@ -11,7 +11,6 @@ using System.Text.RegularExpressions;
 * Modification 04/04 by Jessica Henry @ Method - ModifyDetails - Line 284                              *
 * Modification 05/04 by Jessica Henry @ Method - ModifyDetails - Line 382                              *
 ********************************************************************************************************/
-
 namespace CA2
 {
     class Program
@@ -19,6 +18,7 @@ namespace CA2
         static Player[] players = new Player[5];
         static JuniorPlayer[] JuniorPlayers = new JuniorPlayer[5];
         const string TABLE_FORMAT = "{0,-5}{1,0}";
+        const string TABLE_FORMAT_INPUT = "{0,-30}{1,-5}";
         const string TABLE_OUTPUT = "{0,-9}{1,-11}{2,-11}{3,-11}{4,-11}{5,-11}";
         static int count = 0;
         static int position = 0;
@@ -93,7 +93,7 @@ namespace CA2
                 if (PlayerType == "m" || PlayerType == "menu")
                     break;
 
-                if (PlayerType == "j")
+                if (PlayerType == "j" || PlayerType == "junior")
                 {
                     JuniorPlayers[count] = new JuniorPlayer();
                     players[count] = JuniorPlayers[count];
@@ -102,16 +102,15 @@ namespace CA2
                     players[count] = new Player();
                 do
                 {
-                    Console.Write("Insert Player's name : ");
+                    Console.Write(TABLE_FORMAT_INPUT, "Insert Player's name",":");
                     string name = Console.ReadLine();
-                    result = IsPresent(name, "Player's name")&& CheckString(name, "Player's name");
-                    players[count].PlayerName = Console.ReadLine();
-
+                    result = IsPresent(name, "Player's name") && CheckString(name, "Player's name");
+                    players[count].PlayerName = name;
                 } while (!result);
                 do
                 {
                     int goalsScoreAux = 0;
-                    Console.Write("Goals Scored         : ");
+                    Console.Write(TABLE_FORMAT_INPUT, "Goals Scored", ":");
                     string goalsScore = Console.ReadLine();
                     result = IsPresent(goalsScore, "Goals Scored") && IsInteger(goalsScore, "Goals Scored", ref goalsScoreAux);
                     players[count].GoalsScored = goalsScoreAux;
@@ -120,23 +119,21 @@ namespace CA2
                 do
                 {
                     int matchesPlayedAux = 0;
-                    Console.Write("Maches Played        : ");
+                    Console.Write(TABLE_FORMAT_INPUT, "Maches Played", ":");
                     string matchesPlayed = Console.ReadLine();
                     result = IsPresent(matchesPlayed, "Maches Played") && IsInteger(matchesPlayed, "Maches Played", ref matchesPlayedAux);
                     players[count].MatchesPlayed = matchesPlayedAux;
 
                 } while (!result);
-                if (PlayerType == "j")
+                if (PlayerType == "j" || PlayerType=="junior")
                 {
                     do
                     {
                         int ageTypeInt = 0;
-                        Console.Write("Enter Age of the Player Junior: ");
+                        Console.Write(TABLE_FORMAT,"Enter Age of the Player Junior",":");
                         string age = Console.ReadLine();
                         result = IsPresent(age, "Player Age") && IsInteger(age, "Maches Played", ref ageTypeInt) && CheckPositive(ageTypeInt, "Age") && CheckRange("Junior Age", 3, 17, ageTypeInt);
                         ((JuniorPlayer)players[count]).Age = ageTypeInt;
-                        //Check Ranger Age
-
                     } while (!result);
                 }
                 //players[count] = player; ------> this part is for second option, in case you would like to insert in the array in the end 
@@ -253,7 +250,7 @@ namespace CA2
 
             foreach (var playersInfo in players)
             {
-                Console.WriteLine(playersInfo); 
+                Console.WriteLine(playersInfo);
             }
 
             Console.WriteLine("Press any key to continue...");
@@ -319,8 +316,6 @@ namespace CA2
                                     players[i].PlayerName = players[i].ModifyPlayersName(newName);
                                     userMadeChanges = true;
                                 } while (!result);
-                              
-                               
                             }
                             else if (userChoice == "2")
                             {
@@ -331,7 +326,7 @@ namespace CA2
                                     string goalsScore = Console.ReadLine();
                                     result = IsPresent(goalsScore, "Goals Scored") && IsInteger(goalsScore, "Goals Scored", ref newGoalsScored);
                                 } while (!result);
-                                
+
                                 players[i].GoalsScored = players[i].ModifyGoalsScored(newGoalsScored);
                                 userMadeChanges = true;
                             }
@@ -343,7 +338,7 @@ namespace CA2
                                     Console.Write("Insert a New Numbers of matches Played: ");
                                     string matchesPlayed = Console.ReadLine();
                                     result = IsPresent(matchesPlayed, "Matches Played") && IsInteger(matchesPlayed, "Matches Played", ref newMatchesPlayed);
-                                   
+
                                 } while (!result);
                                 players[i].MatchesPlayed = players[i].ModifyMatchesPlayed(newMatchesPlayed);
                                 userMadeChanges = true;
@@ -356,7 +351,7 @@ namespace CA2
                                     Console.Write("Enter Age of the Junior Player: ");
                                     string age = Console.ReadLine();
                                     result = IsPresent(age, "Junior Player Age") && IsInteger(age, "Junior Player Age", ref newAgeJuniorPlayer) && CheckPositive(newAgeJuniorPlayer, "Age") && CheckRange("Junior Age", 3, 17, newAgeJuniorPlayer);
-                                 
+
                                 } while (!result);
                                 ((JuniorPlayer)players[i]).Age = ((JuniorPlayer)players[i]).ModifyJuniorPlayerAge(newAgeJuniorPlayer);
                                 userMadeChanges = true;
@@ -378,7 +373,7 @@ namespace CA2
                                 Console.ForegroundColor = ConsoleColor.Gray;
                             }
 
-                        } while (inputTypeInt != EXIT && ( l_choice == "yes" || l_choice == "y"));
+                        } while (inputTypeInt != EXIT && (l_choice == "yes" || l_choice == "y"));
                         //if (userMadeChanges)
                         //{
                         //    Console.ForegroundColor = ConsoleColor.DarkGreen;
@@ -417,7 +412,7 @@ namespace CA2
             {
                 Console.Write("\nEnter Player ID : ");
                 string userInput = Console.ReadLine();
-                result = IsPresent(userInput, "Player ID") && IsInteger(userInput, "Code", ref playerNumID);// && CheckPlayerID(playerNumID, "ID Number");
+                result = IsPresent(userInput, "Player ID") && IsInteger(userInput, "Code", ref playerNumID) && CheckPlayerID(playerNumID, "ID Number");
 
             } while (!result);
             for (int i = 0; i < count; i++)
@@ -476,7 +471,7 @@ namespace CA2
         {
             if (players[0] == null)
             {
-                Console.WriteLine(" | X |No player is registered, you must register it first");
+                Console.WriteLine(" | X | No player is registered, you must register it first");
                 return false;
             }
             else
@@ -536,12 +531,15 @@ namespace CA2
         }
         private static bool CheckString(string inputIn, string messageIn)
         {
-            if (Regex.IsMatch(inputIn, @"[a-zA-Z]"))
-                return true;
-            else
+
+            if (!Regex.IsMatch(inputIn, @"^[a-zA-Z]+$"))
             {
                 Console.WriteLine("{0} must contain only letters ", messageIn);
                 return false;
+            }
+            else
+            {
+                return true;
             }
         }
     }
